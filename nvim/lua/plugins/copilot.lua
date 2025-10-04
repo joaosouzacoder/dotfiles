@@ -1,20 +1,52 @@
 return {
-  "zbirenbaum/copilot.lua",
-  opts = {
-    suggestion = {
-      enabled = not vim.g.ai_cmp,
-      auto_trigger = true,
-      hide_during_completion = vim.g.ai_cmp,
-      keymap = {
-        accept = false, -- handled by nvim-cmp / blink.cmp
-        next = "<M-]>",
-        prev = "<M-[>",
+  {
+    "zbirenbaum/copilot.lua",
+    cmd = "Copilot",
+    event = "VeryLazy",
+    opts = {
+      suggestion = { enabled = false },
+      panel = { enabled = false },
+      filetypes = {
+        markdown = true,
+        help = true,
       },
     },
-    panel = { enabled = false },
-    filetypes = {
-      markdown = true,
-      help = true,
+  },
+
+  {
+    "olimorris/codecompanion.nvim",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "j-hui/fidget.nvim",
     },
+
+    keys = {
+      { "<leader>cca", "<CMD>CodeCompanionActions<CR>", mode = { "n", "v" }, desc = "CodeCompanion actions" },
+      { "<leader>cci", "<CMD>CodeCompanion<CR>", mode = { "n", "v" }, desc = "CodeCompanion inline" },
+      { "<leader>ccc", "<CMD>CodeCompanionChat Toggle<CR>", mode = { "n", "v" }, desc = "CodeCompanion chat (toggle)" },
+      { "<leader>ccp", "<CMD>CodeCompanionChat Add<CR>", mode = { "v" }, desc = "CodeCompanion chat add code" },
+    },
+
+    opts = {
+      display = {
+        diff = {
+          enabled = true, -- desabilita diff
+        },
+      },
+      strategies = {
+        chat = { adapter = "copilot" },
+        inline = { adapter = "copilot" },
+      },
+      opts = {
+        language = "Portugues",
+      },
+    },
+
+    config = function(_, opts)
+      require("codecompanion").setup(opts)
+
+      require("fidget").setup()
+    end,
   },
 }
