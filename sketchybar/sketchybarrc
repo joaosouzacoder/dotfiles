@@ -6,8 +6,7 @@ source "$HOME/.config/sketchybar/icons.sh" # Loads all defined icons
 ITEM_DIR="$HOME/.config/sketchybar/items" # Directory where the items are configured
 PLUGIN_DIR="$HOME/.config/sketchybar/plugins" # Directory where all the plugin scripts are stored
 
-FONT="SF Pro" # Needs to have Regular, Bold, Semibold, Heavy and Black variants
-SPACE_CLICK_SCRIPT="yabai -m space --focus \$SID 2>/dev/null" # The script that is run for clicking on space components
+FONT="JetBrainsMono Nerd Font" # Needs to have Regular, Bold, Semibold, Heavy and Black variants
 
 PADDINGS=3 # All paddings use this value (icon, label, background)
 
@@ -54,7 +53,10 @@ source "$ITEM_DIR/spaces.sh"
 # source "$ITEM_DIR/spotify.sh"
 
 # Right
-source "$ITEM_DIR/calendar.sh"
+# source "$ITEM_DIR/calendar.sh"
+source "$ITEM_DIR/clock.sh"
+# source "$ITEM_DIR/cpu.sh"
+# source "$ITEM_DIR/github.sh"
 
 ############## FINALIZING THE SETUP ##############
 sketchybar --update

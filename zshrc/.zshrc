@@ -1,156 +1,142 @@
-# Path to your oh-my-zsh installation.
-# Reevaluate the prompt string each time it's displaying a prompt
-setopt prompt_subst
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
-autoload bashcompinit && bashcompinit
-autoload -Uz compinit
-compinit
-source <(kubectl completion zsh)
-complete -C '/usr/local/bin/aws_completer' aws
+# ===============================================
+# ZSH Configuration
+# ===============================================
 
-source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-bindkey '^w' autosuggest-execute
-bindkey '^e' autosuggest-accept
-bindkey '^u' autosuggest-toggle
-bindkey '^L' vi-forward-word
-bindkey '^k' up-line-or-search
-bindkey '^j' down-line-or-search
+# Oh My Zsh Configuration
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="awesomepanda"
+plugins=(git)
 
-eval "$(starship init zsh)"
-export STARSHIP_CONFIG=~/.config/starship/starship.toml
+# Custom Prompt
+PROMPT='$(prompt_java_version) $(prompt_folder) % '
 
-# You may need to manually set your language environment
-export LANG=en_US.UTF-8
+# Load Oh My Zsh
+if [ -f "$ZSH/oh-my-zsh.sh" ]; then
+  source "$ZSH/oh-my-zsh.sh"
+fi
 
-export EDITOR=/opt/homebrew/bin/nvim
+# ===============================================
+# Package Managers & Core Tools
+# ===============================================
 
-alias la=tree
-alias cat=bat
+# Homebrew (macOS vs Linux)
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export PATH="/opt/homebrew/bin:$PATH"
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+fi
 
-# Git
-alias gc="git commit -m"
-alias gca="git commit -a -m"
-alias gp="git push origin HEAD"
-alias gpu="git pull origin"
-alias gst="git status"
-alias glog="git log --graph --topo-order --pretty='%w(100,0,6)%C(yellow)%h%C(bold)%C(black)%d %C(cyan)%ar %C(green)%an%n%C(bold)%C(white)%s %N' --abbrev-commit"
-alias gdiff="git diff"
-alias gco="git checkout"
-alias gb='git branch'
-alias gba='git branch -a'
-alias gadd='git add'
-alias ga='git add -p'
-alias gcoall='git checkout -- .'
-alias gr='git remote'
-alias gre='git reset'
+# ASDF Version Manager
+if [ -f "$HOME/.asdf/asdf.sh" ]; then
+  source "$HOME/.asdf/asdf.sh"
+  fpath+=("$HOME/.asdf/completions")
+  autoload -U compinit && compinit
+fi
 
-# Docker
-alias dco="docker compose"
-alias dps="docker ps"
-alias dpa="docker ps -a"
-alias dl="docker ps -l -q"
-alias dx="docker exec -it"
+# ASDF Plugins - Auto set environment variables
+[ -f "$HOME/.asdf/plugins/java/set-java-home.zsh" ] && source "$HOME/.asdf/plugins/java/set-java-home.zsh"
+[ -f "$HOME/.asdf/plugins/dotnet-core/set-dotnet-home.zsh" ] && source "$HOME/.asdf/plugins/dotnet-core/set-dotnet-home.zsh"
 
-# Dirs
-alias ..="cd .."
-alias ...="cd ../.."
-alias ....="cd ../../.."
-alias .....="cd ../../../.."
-alias ......="cd ../../../../.."
+# RVM Ruby
+export PATH="$PATH:$HOME/.rvm/bin"
 
-# GO
-export GOPATH='/Users/omerxx/go'
+# ===============================================
+# Development Languages & Runtimes
+# ===============================================
 
-# VIM
-alias v="/Users/omerxx/.nix-profile/bin/nvim"
+# Rust
+export PATH="$HOME/.cargo/bin:$PATH"
 
-# Nmap
-alias nm="nmap -sC -sV -oN nmap"
+# Node.js - PNPM
+export PNPM_HOME="$HOME/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
 
-export PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/omer/.vimpkg/bin:${GOPATH}/bin:/Users/omerxx/.cargo/bin
+# Bun JavaScript Runtime
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+[ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
 
-alias cl='clear'
+# .NET Core
+export PATH="$HOME/.dotnet/tools:$PATH"
 
-# K8S
-export KUBECONFIG=~/.kube/config
-alias k="kubectl"
-alias ka="kubectl apply -f"
-alias kg="kubectl get"
-alias kd="kubectl describe"
-alias kdel="kubectl delete"
-alias kl="kubectl logs"
-alias kgpo="kubectl get pod"
-alias kgd="kubectl get deployments"
-alias kc="kubectx"
-alias kns="kubens"
-alias kl="kubectl logs -f"
-alias ke="kubectl exec -it"
-alias kcns='kubectl config set-context --current --namespace'
-alias podname=''
+# Deno
+[ -f "$HOME/.deno/env" ] && source "$HOME/.deno/env"
 
-# HTTP requests with xh!
-alias http="xh"
+# ===============================================
+# Mobile Development
+# ===============================================
 
-# VI Mode!!!
-bindkey jj vi-cmd-mode
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  # macOS default Android SDK path
+  export ANDROID_HOME="$HOME/Library/Android/sdk"
+else
+  # Linux default Android SDK path
+  export ANDROID_HOME="$HOME/Android/Sdk"
+fi
+export PATH="$ANDROID_HOME/emulator:$ANDROID_HOME/tools:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH"
 
-# Eza
-alias l="eza -l --icons --git -a"
-alias lt="eza --tree --level=2 --long --icons --git"
-alias ltree="eza --tree --level=2  --icons --git"
+# ===============================================
+# Cloud & DevOps Tools
+# ===============================================
 
-# SEC STUFF
-alias gobust='gobuster dir --wordlist ~/security/wordlists/diccnoext.txt --wildcard --url'
-alias dirsearch='python dirsearch.py -w db/dicc.txt -b -u'
-alias massdns='~/hacking/tools/massdns/bin/massdns -r ~/hacking/tools/massdns/lists/resolvers.txt -t A -o S bf-targets.txt -w livehosts.txt -s 4000'
-alias server='python -m http.server 4445'
-alias tunnel='ngrok http 4445'
-alias fuzz='ffuf -w ~/hacking/SecLists/content_discovery_all.txt -mc all -u'
-alias gr='~/go/src/github.com/tomnomnom/gf/gf'
+# Kubernetes
+export PATH="$HOME/.krew/bin:$PATH"
+export KUBE_EDITOR="code --wait"
 
-### FZF ###
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow'
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# Docker Desktop (macOS only)
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export PATH="$PATH:/Applications/Docker.app/Contents/Resources/bin/"
+fi
 
-export PATH=/opt/homebrew/bin:$PATH
-
-alias mat='osascript -e "tell application \"System Events\" to key code 126 using {command down}" && tmux neww "cmatrix"'
-
-# Nix!
-export NIX_CONF_DIR=$HOME/.config/nix
-export PATH=/run/current-system/sw/bin:$PATH
-
-function ranger {
-	local IFS=$'\t\n'
-	local tempfile="$(mktemp -t tmp.XXXXXX)"
-	local ranger_cmd=(
-		command
-		ranger
-		--cmd="map Q chain shell echo %d > "$tempfile"; quitall"
-	)
-
-	${ranger_cmd[@]} "$@"
-	if [[ -f "$tempfile" ]] && [[ "$(cat -- "$tempfile")" != "$(echo -n `pwd`)" ]]; then
-		cd -- "$(cat "$tempfile")" || return
-	fi
-	command rm -f -- "$tempfile" 2>/dev/null
-}
-alias rr='ranger'
-
-# navigation
-cx() { cd "$@" && l; }
-fcd() { cd "$(find . -type d -not -path '*/.*' | fzf)" && l; }
-f() { echo "$(find . -type f -not -path '*/.*' | fzf)" | pbcopy }
-fv() { nvim "$(find . -type f -not -path '*/.*' | fzf)" }
-
- # Nix
- if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
-	 . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
- fi
- # End Nix
-
-export XDG_CONFIG_HOME="/Users/omerxx/.config"
-
-eval "$(zoxide init zsh)"
-eval "$(atuin init zsh)"
+# Direnv (Environment Management)
 eval "$(direnv hook zsh)"
+
+# ===============================================
+# Development Tools & IDEs
+# ===============================================
+
+# XDG Base Directory
+export XDG_CONFIG_HOME="$HOME/.config"
+
+# Java Development (Lombok support for JDTLS)
+export JDTLS_JVM_ARGS="-javaagent:$HOME/.local/share/java/lombok.jar"
+
+# OpenCode (se existir)
+[ -d "$HOME/.opencode/bin" ] && export PATH="$HOME/.opencode/bin:$PATH"
+
+# ===============================================
+# Custom Scripts & Local Binaries
+# ===============================================
+
+export PATH="$HOME/.local/bin:$PATH"
+[ -d "$HOME/.scripts" ] && export PATH="$HOME/.scripts:$PATH"
+
+# ===============================================
+# Shell Enhancements
+# ===============================================
+
+# ZSH Autosuggestions
+[ -f "$HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" ] && source "$HOME/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh"
+
+# ===============================================
+# Aliases
+# ===============================================
+
+# Editor
+alias vim="nvim"
+
+# Kubernetes
+alias kc="kubectl"
+
+# File Listing (exa/eza com icons)
+if command -v eza >/dev/null 2>&1; then
+  alias ll="eza --icons -l --group-directories-first --git --header --long --time-style=long-iso"
+elif command -v exa >/dev/null 2>&1; then
+  alias ll="exa --icons -l --group-directories-first --git --header --long --time-style=long-iso"
+fi
+
+# Development
+alias rustl="evcxr"
