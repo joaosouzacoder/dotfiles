@@ -3,7 +3,6 @@ local function load_env_file(path)
   local env = {}
   local f = io.open(path, "r")
   if not f then
-    vim.notify("⚠️  Arquivo .env não encontrado: " .. path, vim.log.levels.WARN)
     return env
   end
 
@@ -39,18 +38,12 @@ local function load_env_file(path)
       env[key] = value
       loaded_count = loaded_count + 1
     else
-      vim.notify("⚠️  Linha inválida no .env (linha " .. line_count .. "): " .. line, vim.log.levels.WARN)
     end
 
     ::continue::
   end
 
   f:close()
-
-  vim.notify(
-    "✅ .env carregado: " .. loaded_count .. " variáveis de " .. line_count .. " linhas",
-    vim.log.levels.INFO
-  )
 
   -- Debug: mostrar algumas variáveis carregadas
   local debug_vars = {}
@@ -63,7 +56,6 @@ local function load_env_file(path)
   end
 
   if #debug_vars > 0 then
-    vim.notify("🔍 Exemplos carregados: " .. table.concat(debug_vars, ", "), vim.log.levels.INFO)
   end
 
   return env
@@ -85,7 +77,6 @@ local function validate_env(env)
   end
 
   if #missing > 0 then
-    vim.notify("⚠️  Variáveis essenciais faltando no .env: " .. table.concat(missing, ", "), vim.log.levels.WARN)
     return false
   end
 
@@ -99,20 +90,16 @@ local function detect_dap_config()
   -- 1. Verificar se existe .nvim/dap.lua
   local nvim_dap_path = cwd .. "/.nvim/dap.lua"
   if vim.fn.filereadable(nvim_dap_path) == 1 then
-    vim.notify("🔍 Carregando configuração DAP de .nvim/dap.lua", vim.log.levels.INFO)
     local success, config = pcall(dofile, nvim_dap_path)
     if success and config then
       return config
     else
-      vim.notify("⚠️  Erro ao carregar .nvim/dap.lua: " .. tostring(config), vim.log.levels.WARN)
     end
   end
 
   -- 2. Verificar se existe .vscode/launch.json
   local vscode_config_path = cwd .. "/.vscode/launch.json"
   if vim.fn.filereadable(vscode_config_path) == 1 then
-    vim.notify("🔍 Convertendo configuração DAP de .vscode/launch.json", vim.log.levels.INFO)
-
     local vscode_content = vim.fn.readfile(vscode_config_path)
     local content = table.concat(vscode_content, "\n")
 
@@ -184,10 +171,8 @@ local function detect_main_class()
 
         if package_name ~= "" and class_name ~= "" then
           local full_class = package_name .. "." .. class_name
-          vim.notify("🎯 Main class detectada: " .. full_class, vim.log.levels.INFO)
           return full_class
         elseif class_name ~= "" then
-          vim.notify("🎯 Main class detectada: " .. class_name, vim.log.levels.INFO)
           return class_name
         end
       end
@@ -203,7 +188,6 @@ local function detect_main_class()
   }
 
   for _, fallback in ipairs(fallbacks) do
-    vim.notify("⚠️  Usando fallback para main class: " .. fallback, vim.log.levels.WARN)
     return fallback
   end
 
@@ -271,7 +255,6 @@ return {
                 config.env = vim.tbl_extend("force", config.env or {}, env)
               end
               dap.configurations.java = existing_configs
-              vim.notify("✅ Configuração DAP carregada e .env injetado", vim.log.levels.INFO)
             else
               -- Setup automático
               local main_class = detect_main_class()
@@ -322,8 +305,6 @@ return {
                   timeout = 20000,
                 },
               }
-
-              vim.notify("🔧 Configuração DAP automática criada com .env", vim.log.levels.INFO)
             end
 
             -- Comandos aprimorados
@@ -345,10 +326,6 @@ return {
                     local mvn_cmd = vim.fn.executable("./mvnw") == 1 and "./mvnw" or "mvn"
                     local full_cmd = env_string .. mvn_cmd .. " spring-boot:run"
 
-                    vim.notify(
-                      "🚀 Executando: " .. mvn_cmd .. " spring-boot:run com " .. vim.tbl_count(env) .. " variáveis",
-                      vim.log.levels.INFO
-                    )
                     vim.cmd("TermExec cmd='" .. full_cmd .. "' direction=float")
                   end,
                   desc = "Run Spring Boot with .env",
@@ -356,7 +333,6 @@ return {
                 {
                   "<leader>je",
                   function()
-                    vim.notify("🌍 Variáveis .env carregadas (" .. vim.tbl_count(env) .. "):", vim.log.levels.INFO)
                     local sorted_keys = {}
                     for k in pairs(env) do
                       table.insert(sorted_keys, k)
@@ -384,7 +360,6 @@ return {
                     -- Recarregar .env
                     env = load_env_file(env_path)
                     validate_env(env)
-                    vim.notify("🔄 .env recarregado", vim.log.levels.INFO)
                   end,
                   desc = "Reload .env",
                 },
