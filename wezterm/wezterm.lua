@@ -6,7 +6,7 @@ return {
 	enable_tab_bar = false,
 	font_size = 16.0,
 	font = wezterm.font("JetBrains Mono"),
-	-- macos_window_background_blur = 40,
+	macos_window_background_blur = 40,
 	-- macos_window_background_blur = 100,
 
 	-- window_background_image = "/Users/johnsouza/Documents/Wallpaper/Café Lo-fi 1920x1080.jpeg",
