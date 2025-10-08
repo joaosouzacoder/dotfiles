@@ -5,3 +5,7 @@
 vim.opt.wrap = true
 vim.g.codeium_os = "Darwin"
 vim.g.codeium_arch = "arm64"
+
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true

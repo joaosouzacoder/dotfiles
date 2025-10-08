@@ -112,8 +112,6 @@ return {
       -- signature = { enabled = true },
 
       sources = {
-        -- adding any nvim-cmp sources here will enable them
-        -- with blink.compat
         compat = {},
         default = { "copilot", "lsp", "path", "snippets", "buffer" },
       },
@@ -148,13 +146,13 @@ return {
       keymap = {
         -- If the command/function returns false or nil, the next command/function will be run.
         preset = "none",
-        ["<A-j>"] = {
+        ["<C-j>"] = {
           function(cmp)
             return cmp.select_next({ auto_insert = false })
           end,
           "fallback",
         },
-        ["<A-k>"] = {
+        ["<C-k>"] = {
           function(cmp)
             return cmp.select_prev({ auto_insert = false })
           end,
