@@ -4,6 +4,18 @@
 vim.api.nvim_set_keymap("i", "jj", "<Esc>", { noremap = false })
 vim.api.nvim_set_keymap("i", "jk", "<Esc>", { noremap = false })
 
+if vim.g.vscode then
+  vim.keymap.set("n", "<leader>ff", function()
+    require("vscode").action("workbench.action.quickOpen")
+  end)
+  vim.keymap.set("n", "<leader>e", function()
+    require("vscode").action("workbench.view.explorer")
+  end, { desc = "Open Explorer in VSCode" })
+
+  vim.keymap.set("n", "<leader>gg", function()
+    require("vscode").action("workbench.view.scm")
+  end, { desc = "Open Source Control in VSCode" })
+end
 -- =========================================
 -- 🔥 Delete com Black Hole (sem copiar)
 -- =========================================
