@@ -1,3 +1,4 @@
+local supermaven = require("lazyvim.plugins.extras.ai.supermaven")
 return {
   {
     "saghen/blink.cmp",

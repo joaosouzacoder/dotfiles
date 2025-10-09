@@ -1,6 +1,15 @@
 return {
   {
     "github/copilot.vim",
+    config = function()
+      vim.g.copilot_assume_mapped = true
+      vim.g.copilot_auto_trigger = true
+      vim.g.copilot_suggestion_auto_trigger = true
+      vim.g.copilot_suggestion_enabled = true
+      vim.g.copilot_filetypes = {
+        ["*"] = true, -- habilita para todos os tipos de arquivo
+      }
+    end,
   },
 
   {

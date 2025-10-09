@@ -7,8 +7,10 @@ vim.api.nvim_set_keymap("i", "jk", "<Esc>", { noremap = false })
 -- =========================================
 -- 🔥 Delete com Black Hole (sem copiar)
 -- =========================================
-
-local wk = require("which-key")
+local ok, wk = pcall(require, "which-key")
+if not ok then
+  return
+end
 
 wk.add({
   { "<leader>D", group = "🗑 Delete (black hole)" },
@@ -17,12 +19,7 @@ wk.add({
   { "<leader>Dw", '"_dw', desc = "Delete word" },
   { "<leader>Ds", '"_d', mode = "v", desc = "Delete selection" },
 
-  -- 🔽 Delete até o final do arquivo
   { "<leader>De", '"_dG', desc = "🔽 Delete until end of file" },
-
-  -- 🔼 Delete até o início do arquivo
   { "<leader>Di", '"_dgg', desc = "🔼 Delete until start of file" },
-
-  -- 💣 Delete tudo no arquivo
   { "<leader>Da", 'gg"_dG', desc = "💣 Delete entire file" },
 })
