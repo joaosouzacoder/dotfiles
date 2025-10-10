@@ -142,3 +142,17 @@ fi
 alias rustl="evcxr"
 
 export PATH="/opt/nvim/bin:$PATH"
+
+eval "$(direnv hook zsh)"
+alias env:init='echo "use asdf\nexport \$(grep -v \"^#\" .env | xargs)" > .envrc && direnv allow && echo ".envrc criado e ativado ✅"'
+echo 'export PATH="/opt/homebrew/opt/ruby/bin:$PATH"' >> ~/.zshrc
+
+echo 'export PATH="/opt/homebrew/opt/ruby/bin:$PATH"' >> /Users/johnsouza/.config/zshrc/.zshrc
+
+export LDFLAGS="-L/opt/homebrew/opt/ruby/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/ruby/include"
+
+export PKG_CONFIG_PATH="/opt/homebrew/opt/ruby/lib/pkgconfig"
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+export PATH="/opt/homebrew/lib/ruby/gems/3.4.0/bin:$PATH"
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"

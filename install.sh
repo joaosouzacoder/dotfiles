@@ -97,6 +97,7 @@ BREW_PACKAGES=(
     neovim
     tmux
     direnv
+    ruby
     reattach-to-user-namespace
     kubectl
     helm
