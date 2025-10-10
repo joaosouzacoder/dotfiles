@@ -140,3 +140,5 @@ fi
 
 # Development
 alias rustl="evcxr"
+
+export PATH="/opt/nvim/bin:$PATH"
